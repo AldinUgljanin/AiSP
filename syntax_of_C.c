@@ -14,7 +14,7 @@ int main(){
     char testGrade = 'A'; // single 8-bit character
     char name[] = "Aldin"; // array of characters (string)
 
-    // you can make them unsigned by adding "unsigned" prefix
+    // you can make them unsigned by adding "unsigned" prefix 
     short age0 = 10;	    // at least 16-bits signed integer
     int age1 = 20;	    // at least 16-bits signed integer
     long age2 = 30; 	    // at least 32-bits signed integer
