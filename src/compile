@@ -1,0 +1,6 @@
+#! /usr/bin/bash
+
+read -p "File name: " FILENAME
+gcc $FILENAME.c -o ../bin/$FILENAME
+echo "********* $FILENAME *********"
+./../bin/$FILENAME
