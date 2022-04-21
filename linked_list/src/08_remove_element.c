@@ -6,12 +6,13 @@ typedef struct NODE{
     struct NODE *next;
 } NODE;
 
-void append_element(NODE **root, int value);
+void append_element(NODE **root,int value);
 void deallocate(NODE **root);
 void print_list(NODE **root);
 void insert_beginning(NODE **root,int value);
 void affter_element(NODE **root, int element, int value);
 void insert_sorted(NODE **root,int value);
+void remove_element(NODE **root,int value);
 
 // MAIN
 
@@ -21,6 +22,7 @@ int main(){
     
     append_element(&root, 30);
     append_element(&root, 40);
+
     insert_beginning(&root, 20);
     insert_beginning(&root, 10);
 
@@ -31,6 +33,9 @@ int main(){
     insert_sorted(&root, 51);
     insert_sorted(&root, 26);
 
+    remove_element(&root, 10);
+    remove_element(&root, 20);
+
     print_list(&root);
 
     deallocate(&root);
@@ -40,7 +45,7 @@ int main(){
 
 // Functions
 
-void append_element(NODE **root, int value){
+void append_element(NODE **root,int value){
 
     NODE *end_node = malloc(sizeof(NODE));
     if(end_node == NULL) exit(1);
@@ -124,3 +129,22 @@ void insert_sorted(NODE **root,int value){
     affter_element(root, temp->data, value);
 }
 
+void remove_element(NODE **root,int value){
+    if(*root == NULL) return;
+
+    if((*root)->data == value){
+	NODE *to_remove = *root;
+	*root = (*root)->next;
+	free(to_remove);
+	return;
+    }
+
+    for(NODE *temp = *root; temp->next != NULL; temp = temp->next){
+	if(temp->next->data == value){
+	    NODE *to_remove = temp->next;
+	    temp->next = temp->next->next;
+	    free(to_remove);
+	    return;
+	}
+    }
+}
