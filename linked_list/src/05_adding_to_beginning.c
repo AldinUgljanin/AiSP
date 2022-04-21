@@ -82,5 +82,4 @@ void insert_beginning(NODE **root,int value){
     new_node->next = *root;
 
     *root = new_node;
-
 }

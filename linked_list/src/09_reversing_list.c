@@ -6,12 +6,14 @@ typedef struct NODE{
     struct NODE *next;
 } NODE;
 
-void append_element(NODE **root, int value);
+void append_element(NODE **root,int value);
 void deallocate(NODE **root);
 void print_list(NODE **root);
 void insert_beginning(NODE **root,int value);
 void affter_element(NODE **root, int element, int value);
 void insert_sorted(NODE **root,int value);
+void remove_element(NODE **root,int value);
+void reverse(NODE **root);
 
 // MAIN
 
@@ -19,17 +21,23 @@ int main(){
 
     NODE *root = NULL;
     
-    append_element(&root, 10);
-    append_element(&root, 20);
-    insert_beginning(&root, 30);
-    insert_beginning(&root, 40);
+    append_element(&root, 30);
+    append_element(&root, 40);
+
+    insert_beginning(&root, 20);
+    insert_beginning(&root, 10);
 
     affter_element(&root, 40, 50);
     affter_element(&root, 20, 25);
     affter_element(&root, 30, 35);
 
-    insert_sorted(&root, 21);
+    insert_sorted(&root, 51);
     insert_sorted(&root, 26);
+
+    remove_element(&root, 10);
+    remove_element(&root, 20);
+
+    reverse(&root);
 
     print_list(&root);
 
@@ -40,7 +48,7 @@ int main(){
 
 // Functions
 
-void append_element(NODE **root, int value){
+void append_element(NODE **root,int value){
 
     NODE *end_node = malloc(sizeof(NODE));
     if(end_node == NULL) exit(1);
@@ -48,7 +56,7 @@ void append_element(NODE **root, int value){
     end_node->data = value;
     end_node->next = NULL;
 
-    if(*root == NULL){
+    if(*root == NULL) {
 	*root = end_node;
 	return;
     }
@@ -93,7 +101,9 @@ void affter_element(NODE **root, int element, int value){
 
     NODE *new_node = malloc(sizeof(NODE));
     if(new_node == NULL) exit(4);
+
     new_node->data = value;
+    new_node->next = NULL;
 
     NODE *temp = *root;
     while(temp != NULL){
@@ -108,21 +118,49 @@ void affter_element(NODE **root, int element, int value){
 }
 
 void insert_sorted(NODE **root,int value){
-    NODE *new_node = malloc(sizeof(NODE));
-    if(new_node == NULL) exit(5);
-    new_node->data = value;
+    if(*root == NULL || (*root)->data >= value) {
+	insert_beginning(root, value);
+	return;
+    }
 
     NODE *temp = *root;
     while(temp->next != NULL){
-	if(new_node->data > temp->data && new_node->data <= temp->next->data){
-	    new_node->next = temp->next;
-	    temp->next = new_node;
-	    break;
-	} else if(new_node->data > temp->data && new_node->data == NULL){
-	    new_node->next = temp->next;
-	    temp->next = new_node;
-	    break;
-	}
+	if(temp->next->data >= value) break;
 	temp = temp->next;
     }
+
+    affter_element(root, temp->data, value);
+}
+
+void remove_element(NODE **root,int value){
+    if(*root == NULL) return;
+
+    if((*root)->data == value){
+	NODE *to_remove = *root;
+	*root = (*root)->next;
+	free(to_remove);
+	return;
+    }
+
+    for(NODE *temp = *root; temp->next != NULL; temp = temp->next){
+	if(temp->next->data == value){
+	    NODE *to_remove = temp->next;
+	    temp->next = temp->next->next;
+	    free(to_remove);
+	    return;
+	}
+    }
+}
+
+void reverse(NODE **root){
+    NODE *prev = NULL;
+    NODE *curr = *root;
+
+    while(curr != NULL){
+	NODE *next = curr->next;
+	curr->next = prev;
+	prev = curr;
+	curr = next;
+    }
+    *root = prev;
 }
